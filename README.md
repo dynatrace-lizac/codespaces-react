@@ -37,6 +37,16 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
+## DevCycle
+
+The app uses DevCycle's OpenFeature React provider to evaluate the `my-new-feature` boolean flag. Add your DevCycle **Client SDK key** to `.env.local`:
+
+```env
+VITE_DEVCYCLE_CLIENT_SDK_KEY=your-client-sdk-key
+```
+
+Restart the dev server after changing environment variables. Without a key, the flag uses its default value (`false`).
+
 ## Learn More
 
 You can learn more in the [Vite documentation](https://vitejs.dev/guide/).

@@ -1,8 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { OpenFeature } from '@openfeature/react-sdk';
+import DevCycleReactProvider from '@devcycle/openfeature-react-provider';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+
+const devCycleSdkKey = import.meta.env.VITE_DEVCYCLE_CLIENT_SDK_KEY;
+if (devCycleSdkKey) {
+  OpenFeature.setProvider(new DevCycleReactProvider(devCycleSdkKey));
+}
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
