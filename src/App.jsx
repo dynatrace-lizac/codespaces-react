@@ -1,10 +1,32 @@
 import './App.css';
 // Import the OpenFeatureProvider and the hook to use boolean feature flags from the OpenFeature React SDK
-import { OpenFeatureProvider, useBooleanFlagValue } from '@openfeature/react-sdk';
+import {
+  OpenFeatureProvider,
+  ProviderStatus,
+  useBooleanFlagDetails,
+  useOpenFeatureClientStatus,
+} from '@openfeature/react-sdk';
+import { useEffect } from 'react';
+
+function FeatureFlagValue() {
+  // Retrieve the value of the 'my-new-feature' feature flag, defaulting to true if not set
+  const flagDetails = useBooleanFlagDetails('my-new-feature', true);
+
+  useEffect(() => {
+    console.info('[DevCycle] Flag evaluation:', {
+      flagKey: 'my-new-feature',
+      value: flagDetails.value,
+      reason: flagDetails.reason,
+      errorCode: flagDetails.errorCode,
+      errorMessage: flagDetails.errorMessage,
+    });
+  }, [flagDetails]);
+
+  return flagDetails.value ? 'React' : 'Dynatrace';
+}
 
 function AppContent() {
-  // Retrieve the value of the 'my-new-feature' feature flag, defaulting to true if not set
-  const myNewFeatureValue = useBooleanFlagValue('my-new-feature', true);
+  const providerStatus = useOpenFeatureClientStatus();
 
   return (
     <div className="App">
@@ -12,8 +34,11 @@ function AppContent() {
         <img src="Octocat.png" className="App-logo" alt="logo" />
         <p>
           GitHub Codespaces <span className="heart">♥️</span>
-          {/* Conditionally render the feature flag value */}
-          {myNewFeatureValue ? 'React' : 'Dynatrace'}
+          {providerStatus === ProviderStatus.READY ? (
+            <FeatureFlagValue />
+          ) : (
+            'Waiting for DevCycle...'
+          )}
         </p>
         <p className="small">
           Edit <code>src/App.jsx</code> and save to reload.
